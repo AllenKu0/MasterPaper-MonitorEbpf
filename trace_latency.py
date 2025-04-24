@@ -8,7 +8,7 @@ import requests
 ipr = IPRoute()
 
 IFNAME = "eth0"
-MIRROR_IFNAME = "lo"
+# MIRROR_IFNAME = "lo"
 
 package_count = 0
 THRESHOLD_PACKAGE = 50
@@ -33,17 +33,17 @@ fn_egress = b.load_func("tc_egress_info", BPF.SCHED_CLS)
 # fn_mirror = b.load_func("tc_mirror_egress_info", BPF.SCHED_CLS)
 
 idx_list = ipr.link_lookup(ifname=IFNAME)
-mirror_idx_list = ipr.link_lookup(ifname=MIRROR_IFNAME)
+# mirror_idx_list = ipr.link_lookup(ifname=MIRROR_IFNAME)
 if not idx_list:
     raise Exception(f"Interface {IFNAME} not found.")
-if not mirror_idx_list:
-    raise Exception(f"Mirror Interface {MIRROR_IFNAME} not found.")
+# if not mirror_idx_list:
+#     raise Exception(f"Mirror Interface {MIRROR_IFNAME} not found.")
 idx = idx_list[0]
-mirror_idx = mirror_idx_list[0]
+# mirror_idx = mirror_idx_list[0]
 
 try:
     ipr.tc("add", "clsact", idx)
-    ipr.tc("add", "clsact", mirror_idx)
+    # ipr.tc("add", "clsact", mirror_idx)
 except NetlinkError as e:
     if e.code == 17:  # File exists
         print("clsact already exists, skipping...")
